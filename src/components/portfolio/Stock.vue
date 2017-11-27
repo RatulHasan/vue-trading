@@ -4,24 +4,25 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                     {{ stock.name }}
-                    <small>(Price: {{ stock.price }} | Quantity: {{stock.quantity}})</small>
+                    <small>(Price: {{ stock.price }} | Quantity: {{ stock.quantity }})</small>
                 </h3>
             </div>
             <div class="panel-body">
                 <div class="pull-left">
                     <input
                             type="number"
-                            class="form-control-sm"
+                            class="form-control"
                             placeholder="Quantity"
                             v-model="quantity"
-                    />
+                            :class="{danger: insufficientQuantity}"
+                    >
                 </div>
                 <div class="pull-right">
                     <button
-                            class="btn btn-success btn-sm"
-                            @click="sellsStock"
-                            :disabled="quantity <= 0/* || !Number.isInteger(quantity)*/"
-                    >Sell
+                            class="btn btn-success"
+                            @click="sellStock"
+                            :disabled="insufficientQuantity || quantity <= 0 || !Number.isInteger(quantity)"
+                    >{{ insufficientQuantity ? 'Not enough' : 'Sell' }}
                     </button>
                 </div>
             </div>
@@ -29,28 +30,39 @@
     </div>
 </template>
 
+<style scoped>
+    .danger {
+        border: 1px solid red;
+    }
+</style>
+
 <script>
     import {mapActions} from 'vuex';
 
     export default {
         props: ['stock'],
-        data(){
-            return{
+        data() {
+            return {
                 quantity: 0
             }
         },
-        methods:{
-            ...mapActions([
-                'sellStock'
-            ]),
-            sellsStock() {
-                const  order = {
+        computed: {
+            insufficientQuantity() {
+                return this.quantity > this.stock.quantity;
+            }
+        },
+        methods: {
+            ...mapActions({
+                placeSellOrder: 'sellStock'
+            }),
+            sellStock() {
+                const order = {
                     stockId: this.stock.id,
                     stockPrice: this.stock.price,
-                    quantuty: this.quantuty
+                    quantity: this.quantity
                 };
-                this.sellStock(order);
-                this.quantuty= 0;
+                this.placeSellOrder(order);
+                this.quantity = 0;
             }
         }
     }
