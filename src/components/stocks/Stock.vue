@@ -40,6 +40,7 @@
             buyStock(){
                 const order = {
                     stockId: this.stock.id,
+                    stockname: this.stock.name,
                     stockPrice: this.stock.price,
                     stockQuantity: this.quantity
                 };
