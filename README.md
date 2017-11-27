@@ -1,4 +1,4 @@
-# vue-test
+# vue-trading
 # vue-cli
 
 > A Vue.js project
@@ -18,5 +18,3 @@ npm run build
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
-# vue-trading
-# vue-trading
